@@ -13,6 +13,10 @@ dist-ssr
 *.local
 .env
 .env.*
+CLAUDE.md
+
+
+
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +28,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+client_update.md

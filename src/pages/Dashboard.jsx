@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink, Outlet } from 'react-router-dom'
+import { LayoutDashboard, CalendarCheck, Users, UtensilsCrossed, ChefHat, Truck, Lock, BarChart3, Settings } from 'lucide-react'
 import { supabase } from '../supabaseClient'
+import CustomerPortal from './customer/CustomerPortal'
+import ChefPortal from './chef/ChefPortal'
+import StaffPortal from './staff/StaffPortal'
 import './Dashboard.css'
 
 const dishes = [
@@ -48,13 +52,18 @@ export default function Dashboard() {
     const user = session.user
     setCurrentUser(user)
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
+    if (profileError) {
+      console.error('Error fetching profile:', profileError)
+    }
+
     const role = profile?.role || 'customer'
+    console.log('Fetched role from DB:', profile?.role, 'Final role set:', role)
     setUserRole(role)
     setLoading(false)
 
@@ -196,12 +205,15 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="dash-body">
-        <nav className="dash-nav">
-          <h1>ARIVA CART</h1>
-          <div className="dash-nav-right">
+        <aside className="dash-sidebar">
+          <div className="logo">
+            <span className="logo-word">ariva.</span>
+          </div>
+          <div className="sidebar-content"></div>
+          <div className="sidebar-bottom">
             <span className="role-badge">Loading...</span>
           </div>
-        </nav>
+        </aside>
         <main className="dash-main">
           <div className="loading-spinner">
             <div className="spinner-circle"></div>
@@ -214,178 +226,89 @@ export default function Dashboard() {
 
   return (
     <div className="dash-body">
-      <nav className="dash-nav">
-        <h1>ARIVA CART</h1>
-        <div className="dash-nav-right">
+      <aside className="dash-sidebar">
+        <div className="logo">
+          <span className="logo-word">ariva.</span>
+        </div>
+        
+        <div className="sidebar-content">
+          {userRole === 'admin' && (
+            <>
+              <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <LayoutDashboard size={18} /> Overview
+              </NavLink>
+              <NavLink to="/dashboard/bookings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <CalendarCheck size={18} /> Bookings
+              </NavLink>
+              <NavLink to="/dashboard/customers" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <Users size={18} /> Customers
+              </NavLink>
+              <NavLink to="/dashboard/menu" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <UtensilsCrossed size={18} /> Menu Editor
+              </NavLink>
+              <NavLink to="/dashboard/kitchen" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <ChefHat size={18} /> Kitchen
+              </NavLink>
+              <NavLink to="/dashboard/logistics" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <Truck size={18} /> Logistics
+              </NavLink>
+              
+              <NavLink to="/dashboard/vault" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <Lock size={18} /> Recipe Vault
+              </NavLink>
+              
+              <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '15px 0' }}></div>
+              
+              <NavLink to="/dashboard/team" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <Users size={18} /> Team & Roles
+              </NavLink>
+              
+              <NavLink to="/dashboard/reports" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <BarChart3 size={18} /> Financial Reports
+              </NavLink>
+              <NavLink to="/dashboard/settings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <Settings size={18} /> Settings
+              </NavLink>
+            </>
+          )}
+          {userRole === 'customer' && (
+            <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+              <LayoutDashboard size={18} /> My Dashboard
+            </NavLink>
+          )}
+          {userRole === 'chef' && (
+            <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+              <ChefHat size={18} /> Kitchen Portal
+            </NavLink>
+          )}
+          {userRole === 'cart_staff' && (
+            <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+              <Truck size={18} /> Cart Operations
+            </NavLink>
+          )}
+        </div>
+
+        <div className="sidebar-bottom">
           <span className="role-badge">{userRole}</span>
           <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </div>
-      </nav>
+      </aside>
 
       <main className="dash-main">
+        {userRole === 'admin' ? (
+          <Outlet />
+        ) : (
+          <div className="portal-container">
+            {/* CUSTOMER PORTAL */}
+            {userRole === 'customer' && <CustomerPortal currentUser={currentUser} />}
 
-        {/* CUSTOMER PORTAL */}
-        {userRole === 'customer' && (
-          <div className="space-y-6">
-            <div className="dash-card">
-              <h2>Book a Cart for Your Event</h2>
-              <p className="desc">Customize your menu, submit details, and track your request status below.</p>
-            </div>
+            {/* CHEF PORTAL */}
+            {userRole === 'chef' && <ChefPortal currentUser={currentUser} />}
 
-            <div className="dash-grid-3">
-              <div className="dash-card">
-                <h3>New Booking Details</h3>
-                <form className="space-y-4" onSubmit={handleBookingSubmit}>
-                  <div>
-                    <label className="form-label">Event Date</label>
-                    <input type="date" className="form-input" required value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="form-label">Venue Pincode</label>
-                    <input type="text" className="form-input" placeholder="e.g. 560001" required value={pincode} onChange={(e) => setPincode(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="form-label">Estimated Guests</label>
-                    <input type="number" className="form-input" min="10" required value={guests} onChange={(e) => setGuests(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="form-label">Select Dishes</label>
-                    <div className="menu-select-box space-y-2">
-                      {dishes.map((dish) => (
-                        <label className="checkbox-label" key={dish.id}>
-                          <input type="checkbox" checked={selectedDishes.includes(dish.id)} onChange={() => toggleDish(dish.id)} />
-                          <span>{dish.name}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <button type="submit" className="submit-btn">Submit Request</button>
-                </form>
-              </div>
-
-              <div className="dash-card">
-                <h3>Your Booking History</h3>
-                <div className="space-y-4">
-                  {customerBookings.length === 0 ? (
-                    <p className="text-muted">No bookings requested yet.</p>
-                  ) : (
-                    customerBookings.map((b) => (
-                      <div className="booking-item" key={b.id}>
-                        <div>
-                          <p className="b-title">Date: {b.event_date}</p>
-                          <p className="b-meta">Pincode: {b.venue_pincode} | Guests: {b.guest_count}</p>
-                        </div>
-                        <span className="booking-status">{b.status.replace(/_/g, ' ')}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
+            {/* CART OPERATIONS PORTAL */}
+            {userRole === 'cart_staff' && <StaffPortal currentUser={currentUser} />}
           </div>
         )}
-
-        {/* ADMIN PORTAL */}
-        {userRole === 'admin' && (
-          <div className="space-y-6">
-            <div className="dash-card">
-              <h2>Admin Command Center</h2>
-              <p className="desc">Manage new leads, assign kitchen orders, and track execution.</p>
-            </div>
-            <div className="dash-grid-2">
-              {adminBookings.length === 0 ? (
-                <p className="text-muted">No client bookings found.</p>
-              ) : (
-                adminBookings.map((b) => (
-                  <div className="admin-card" key={b.id}>
-                    <div className="card-top">
-                      <div>
-                        <span className="card-id">ID: #{b.id}</span>
-                        <h4>{b.event_date}</h4>
-                        <p className="card-meta">Pincode: {b.venue_pincode} | Guests: {b.guest_count}</p>
-                      </div>
-                      <span className="card-status">{b.status.replace(/_/g, ' ')}</span>
-                    </div>
-                    {b.status === 'pending_admin' ? (
-                      <button className="approve-btn" onClick={() => updateBookingStatus(b.id, 'pending_chef_ingredients')}>Approve &amp; Send to Chef</button>
-                    ) : (
-                      <span className="phase-label">Phase: {b.status.replace(/_/g, ' ')}</span>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* CHEF PORTAL */}
-        {userRole === 'chef' && (
-          <div className="space-y-6">
-            <div className="dash-card">
-              <h2>Kitchen Dashboard</h2>
-              <p className="desc">Calculate and submit raw materials based on menu configurations.</p>
-            </div>
-            {chefBookings.length === 0 ? (
-              <p className="text-muted">No bookings waiting for raw material calculations.</p>
-            ) : (
-              chefBookings.map((b) => (
-                <div className="chef-card" key={b.id}>
-                  <h4>Booking #{b.id} - Date: {b.event_date}</h4>
-                  <p className="meta">Target Guests: {b.guest_count} portions</p>
-                  <div className="calc-box">
-                    <h5 className="calc-box-title">Calculated Requisitions Needed</h5>
-                    <div className="calc-grid">
-                      <div>
-                        <label className="calc-label">Base Meats/Proteins (KG)</label>
-                        <input type="number" className="calc-input" value={meatQtys[b.id] || ''} onChange={(e) => setMeatQtys((p) => ({ ...p, [b.id]: e.target.value }))} />
-                      </div>
-                      <div>
-                        <label className="calc-label">Assorted Vegetables (KG)</label>
-                        <input type="number" className="calc-input" value={vegQtys[b.id] || ''} onChange={(e) => setVegQtys((p) => ({ ...p, [b.id]: e.target.value }))} />
-                      </div>
-                    </div>
-                  </div>
-                  <button className="chef-submit" onClick={() => submitIngredients(b.id)}>Submit Raw Materials List</button>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* CART OPERATIONS PORTAL */}
-        {userRole === 'cart_staff' && (
-          <div className="space-y-6">
-            <div className="dash-card">
-              <h2>Cart Operations View</h2>
-              <p className="desc">Real-time checklist for on-site live cooking and resource tracking.</p>
-            </div>
-            {cartBookings.length === 0 ? (
-              <p className="text-muted">No active cookouts currently dispatched.</p>
-            ) : (
-              cartBookings.map((b) => (
-                <div className="cart-card" key={b.id}>
-                  <div>
-                    <h4>Event #{b.id} - Date: {b.event_date}</h4>
-                    <p className="meta">Pincode: {b.venue_pincode} | Guests: {b.guest_count}</p>
-                    <p className="status">Status: {b.status.replace(/_/g, ' ')}</p>
-                  </div>
-                  <div>
-                    {b.status === 'pending_inventory_dispatch' && (
-                      <button className="cart-btn-teal" onClick={() => dispatchCart(b.id)}>Mark Ingredients as Loaded</button>
-                    )}
-                    {b.status === 'dispatched_to_cart' && (
-                      <button className="cart-btn-red" onClick={() => startCooking(b.id)}>Start Live Cooking (On-Site)</button>
-                    )}
-                    {b.status === 'live_cooking' && (
-                      <button className="cart-btn-dark" onClick={() => completeEvent(b.id)}>Mark Event Completed</button>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
       </main>
     </div>
   )
