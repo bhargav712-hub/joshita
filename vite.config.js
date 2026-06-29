@@ -7,4 +7,9 @@ export default defineConfig({
   server: {
     allowedHosts: ["swimmer-single-unbolted.ngrok-free.dev"],
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+  },
 })
