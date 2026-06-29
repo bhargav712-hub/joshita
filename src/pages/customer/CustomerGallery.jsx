@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import { supabase } from '../../supabaseClient'
 import { Share2, Lock } from 'lucide-react'
 
-export default function CustomerGallery({ currentUser }) {
+export default function CustomerGallery() {
+  const { currentUser } = useOutletContext()
   const [events, setEvents] = useState([])
   const [memories, setMemories] = useState({})
   const [loading, setLoading] = useState(true)

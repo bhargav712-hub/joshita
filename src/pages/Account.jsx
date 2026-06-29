@@ -128,7 +128,7 @@ export default function Account() {
         <svg width="0" height="0" style={{ position: 'absolute' }}><defs><g id="arivamark"><path d="M50 8 L80 82 Q50 68 20 82 Z" fill="none" stroke="currentColor" strokeWidth="11" strokeLinejoin="round" strokeLinecap="round" /></g></defs></svg>
         <div className="topbar">
           <Link to="/ariva-website" className="logo" aria-label="ariva home">
-            <img className="logo-img" src="/assets/logo.png" alt="ariva" />
+            <img className="logo-img" src="/assets/ariva-logo-dark.svg" alt="ariva" />
           </Link>
           <Link to="/ariva-website" className="back">← Back to site</Link>
         </div>
@@ -181,7 +181,7 @@ export default function Account() {
       <svg width="0" height="0" style={{ position: 'absolute' }}><defs><g id="arivamark"><path d="M50 8 L80 82 Q50 68 20 82 Z" fill="none" stroke="currentColor" strokeWidth="11" strokeLinejoin="round" strokeLinecap="round" /></g></defs></svg>
       <div className="topbar">
         <Link to="/ariva-website" className="logo" aria-label="ariva home">
-          <img className="logo-img" src="/assets/logo.png" alt="ariva" />
+          <img className="logo-img" src="/assets/ariva-logo-dark.svg" alt="ariva" />
         </Link>
         <Link to="/ariva-website" className="back">← Back to site</Link>
       </div>

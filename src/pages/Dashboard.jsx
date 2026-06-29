@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, CalendarCheck, Users, UtensilsCrossed, ChefHat, Truck, Lock, BarChart3, Settings } from 'lucide-react'
+import { LayoutDashboard, CalendarCheck, Users, UtensilsCrossed, ChefHat, Truck, Lock, BarChart3, Settings, BookOpen, User, Image as ImageIcon, CreditCard } from 'lucide-react'
 import { supabase } from '../supabaseClient'
-import CustomerPortal from './customer/CustomerPortal'
 import ChefPortal from './chef/ChefPortal'
 import StaffPortal from './staff/StaffPortal'
 import './Dashboard.css'
@@ -206,8 +205,8 @@ export default function Dashboard() {
     return (
       <div className="dash-body">
         <aside className="dash-sidebar">
-          <div className="logo">
-            <span className="logo-word">ariva.</span>
+          <div className="logo" style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <img className="logo-img" src="/assets/logo.png" alt="ariva" style={{ height: '32px', width: 'auto', display: 'block' }} />
           </div>
           <div className="sidebar-content"></div>
           <div className="sidebar-bottom">
@@ -227,8 +226,8 @@ export default function Dashboard() {
   return (
     <div className="dash-body">
       <aside className="dash-sidebar">
-        <div className="logo">
-          <span className="logo-word">ariva.</span>
+        <div className="logo" style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <img className="logo-img" src="/assets/logo.png" alt="ariva" style={{ height: '32px', width: 'auto', display: 'block' }} />
         </div>
         
         <div className="sidebar-content">
@@ -272,9 +271,29 @@ export default function Dashboard() {
             </>
           )}
           {userRole === 'customer' && (
-            <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-              <LayoutDashboard size={18} /> My Dashboard
-            </NavLink>
+            <>
+              <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <LayoutDashboard size={18} /> Overview
+              </NavLink>
+              <Link to="/book" className="sidebar-link">
+                <UtensilsCrossed size={18} /> Book an Event
+              </Link>
+              <NavLink to="/dashboard/my-bookings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <CalendarCheck size={18} /> My Bookings
+              </NavLink>
+              <NavLink to="/dashboard/submit-byor" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <BookOpen size={18} /> Submit BYOR
+              </NavLink>
+              <NavLink to="/dashboard/profile" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <User size={18} /> My Profile
+              </NavLink>
+              <NavLink to="/dashboard/gallery" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <ImageIcon size={18} /> Memory Gallery
+              </NavLink>
+              <NavLink to="/dashboard/billing" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                <CreditCard size={18} /> Payment History
+              </NavLink>
+            </>
           )}
           {userRole === 'chef' && (
             <NavLink to="/dashboard" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
@@ -295,13 +314,10 @@ export default function Dashboard() {
       </aside>
 
       <main className="dash-main">
-        {userRole === 'admin' ? (
-          <Outlet />
+        {userRole === 'admin' || userRole === 'customer' ? (
+          <Outlet context={{ currentUser }} />
         ) : (
           <div className="portal-container">
-            {/* CUSTOMER PORTAL */}
-            {userRole === 'customer' && <CustomerPortal currentUser={currentUser} />}
-
             {/* CHEF PORTAL */}
             {userRole === 'chef' && <ChefPortal currentUser={currentUser} />}
 

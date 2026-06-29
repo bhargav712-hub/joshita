@@ -28,7 +28,7 @@ section{padding:96px 0}
 .logo-mark{width:30px;height:30px;flex-shrink:0}
 .logo-word{font-family:var(--sans);font-weight:500;font-size:25px;letter-spacing:1px;color:var(--ink);line-height:1}
 .logo-word::after{content:'.';color:var(--terracotta);font-weight:600}
-.logo-img{height:40px;width:auto;display:block}
+.logo-img{height:64px;width:auto;display:block}
 footer .logo-img{background:var(--bone);padding:7px 11px;border-radius:8px}
 
 /* ---------- NAV ---------- */
@@ -116,13 +116,24 @@ nav.scrolled{box-shadow:0 1px 0 rgba(26,22,20,.08);padding:13px 0}
 .act-roman{font-style:italic;color:var(--terracotta);font-size:.75em}
 .act-tag{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);font-family:var(--sans)}
 .act-body{overflow:visible}
-.act-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 40px;padding:6px 8px 36px}
-.act-items li{list-style:none;font-size:15.5px;color:var(--ink-soft);padding-left:22px;position:relative;transition:color .25s}
-.act-items li::before{content:'·';position:absolute;left:0;color:var(--terracotta);font-weight:700;font-size:22px;line-height:1.1}
-.act-items li::after{content:'';position:absolute;left:22px;bottom:-2px;height:1.5px;width:0;background:var(--terracotta);transition:width .35s ease}
-.act-items li:hover{color:var(--ink)}
-.act-items li:hover::after{width:calc(100% - 22px)}
-.act-items li em{color:var(--terracotta);font-size:13px;font-style:italic;margin-left:6px}
+.menu-legend{display:flex;gap:24px;margin-bottom:32px;font-size:14px;color:var(--ink-soft)}
+.legend-item{display:flex;align-items:center;gap:8px}
+.veg-dot, .nonveg-dot{display:inline-block;width:10px;height:10px;border-radius:2px;position:relative;flex-shrink:0}
+.veg-dot{border:1px solid #2E7D32}
+.veg-dot::after{content:'';position:absolute;inset:2px;background:#2E7D32;border-radius:1px}
+.nonveg-dot{border:1px solid var(--terracotta)}
+.nonveg-dot::after{content:'';position:absolute;inset:2px;background:var(--terracotta);border-radius:1px;clip-path:polygon(50% 0%, 0% 100%, 100% 100%)}
+.menu-items-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px 40px;padding:12px 8px 36px}
+.menu-item{display:flex;flex-direction:column;gap:4px;position:relative;padding-bottom:6px;transition:transform 0.3s ease}
+.menu-item::after{content:'';position:absolute;left:20px;bottom:0;height:1.5px;width:0;background:var(--terracotta);transition:width .35s ease}
+.menu-item:hover{transform:translateX(4px)}
+.menu-item:hover::after{width:calc(100% - 20px)}
+.menu-item-head{display:flex;align-items:center;gap:10px}
+.menu-item-name{font-size:16.5px;color:var(--ink-soft);font-weight:500;transition:color 0.25s}
+.menu-item:hover .menu-item-name{color:var(--ink)}
+.menu-item-desc{font-size:14px;color:var(--ink-soft);line-height:1.5;padding-left:20px;transition:color 0.25s}
+.menu-item:hover .menu-item-desc{color:var(--ink)}
+.menu-item-desc em{color:var(--terracotta);font-style:italic}
 .menu-note{margin-top:32px;font-size:13.5px;color:var(--ink-soft);font-style:italic}
 .menu-illus{display:flex;justify-content:center;gap:56px;margin-top:56px;flex-wrap:wrap;align-items:flex-end}
 .menu-illus figure{text-align:center}
@@ -151,12 +162,13 @@ nav.scrolled{box-shadow:0 1px 0 rgba(26,22,20,.08);padding:13px 0}
 .tier:hover{box-shadow:0 30px 60px rgba(26,22,20,.16)}
 .tier.featured{background:var(--ink);color:var(--bone);border-color:var(--ink)}
 .tier-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--terracotta);color:#fff;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;padding:6px 18px;border-radius:2px;white-space:nowrap}
-.tier h3{font-size:27px;margin-bottom:6px}
-.tier.featured h3{color:#fff}
-.tier-guests{font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px}
+.tier-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px}
+.tier-name{font-family:var(--serif);font-size:24px;margin-bottom:4px}
+.tier.featured .tier-name{color:#fff}
+.tier-guests{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta)}
 .tier.featured .tier-guests{color:var(--sand)}
-.tier-price{font-family:var(--serif);font-size:40px;font-weight:500;margin-bottom:4px}
-.tier-price small{font-size:15px;font-family:var(--sans);font-weight:300;color:var(--ink-soft)}
+.tier-price{font-family:var(--serif);font-size:36px;font-weight:500;margin-bottom:4px}
+.tier-price small{font-size:14px;font-family:var(--sans);font-weight:300;color:var(--ink-soft)}
 .tier.featured .tier-price small{color:rgba(244,239,230,.6)}
 .tier ul{list-style:none;margin:28px 0 36px;flex:1}
 .tier ul li{padding:9px 0 9px 26px;position:relative;font-size:14.5px;color:var(--ink-soft);border-bottom:1px solid rgba(26,22,20,.07)}
@@ -248,7 +260,7 @@ nav.scrolled{box-shadow:0 1px 0 rgba(26,22,20,.08);padding:13px 0}
 .booking .section-title{color:#fff}
 .booking .section-sub{color:rgba(244,239,230,.7)}
 .book-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:72px;margin-top:24px}
-.book-info h3{color:#fff;font-size:24px;margin:32px 0 10px}
+.book-info h3{color:var(--ink);font-size:24px;margin:32px 0 10px}
 .book-info p{color:rgba(244,239,230,.72);font-size:15px}
 .book-info a{color:var(--sand);border-bottom:1px solid rgba(216,164,127,.4)}
 .form-card{background:rgba(244,239,230,.04);border:1px solid rgba(244,239,230,.15);border-radius:8px;padding:44px}

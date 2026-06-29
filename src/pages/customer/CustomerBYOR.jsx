@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import { supabase } from '../../supabaseClient'
 
-export default function CustomerBYOR({ currentUser }) {
+export default function CustomerBYOR() {
+  const { currentUser } = useOutletContext()
   const [recipeName, setRecipeName] = useState('')
   const [familyStory, setFamilyStory] = useState('')
   const [ingredients, setIngredients] = useState('')

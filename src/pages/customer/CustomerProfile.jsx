@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import { supabase } from '../../supabaseClient'
 
-export default function CustomerProfile({ currentUser }) {
+export default function CustomerProfile() {
+  const { currentUser } = useOutletContext()
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   

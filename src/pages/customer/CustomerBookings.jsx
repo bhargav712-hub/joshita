@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import { supabase } from '../../supabaseClient'
-import NewBookingForm from './NewBookingForm'
 
-export default function CustomerBookings({ currentUser }) {
+export default function CustomerBookings() {
+  const { currentUser } = useOutletContext()
+  const navigate = useNavigate()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -34,8 +36,12 @@ export default function CustomerBookings({ currentUser }) {
   return (
     <div className="space-y-6">
       
-      {/* NEW BOOKING FORM */}
-      <NewBookingForm currentUser={currentUser} onBookingSuccess={loadBookings} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>My Events</h2>
+        <button className="submit-btn" style={{ width: 'auto', marginTop: 0 }} onClick={() => navigate('/dashboard/book')}>
+          + Book an Event
+        </button>
+      </div>
 
       {/* UPCOMING EVENTS */}
       <div className="dash-card">

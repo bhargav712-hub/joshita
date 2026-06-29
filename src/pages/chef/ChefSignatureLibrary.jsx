@@ -13,7 +13,7 @@ export default function ChefSignatureLibrary({ currentUser }) {
 
   async function loadLibrary() {
     setLoading(true)
-    const { data } = await supabase.from('menu_items').select('*').eq('is_available', true)
+    const { data } = await supabase.from('menu_items').select('*').eq('is_active', true)
     if (data) setRecipes(data)
     setLoading(false)
   }

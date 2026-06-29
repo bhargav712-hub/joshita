@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+            max-width: 400px;
+        }
+        /* Hidden default checkbox */
+        .checklist input[type="checkbox"] {
+            display: none;
+        }
+        /* Style for the item row */
+        .checklist label {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+        /* Hover effect */
+        .checklist label:hover {
+            border-color: #b0b0b0;
+            background-color: #f5f5f5;
+        }
+        /* Custom indicator square inside the row */
+        .checklist label::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border: 2px solid #aaa;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        /* Active state: When item is clicked/checked */
+        .checklist input[type="checkbox"]:checked + label {
+            border-color: #2e7d32; /* Green boundary */
+            background-color: #e8f5e9; /* Light green background */
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        /* Change the indicator square when checked */
+        .checklist input[type="checkbox"]:checked + label::before {
+            background-color: #2e7d32;
+            border-color: #2e7d32;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C//svg%3E");
+            background-size: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>My Items</h2>
+    <ul class="checklist">
+        <li>
+            <input type="checkbox" id="item1">
+            <label for="item1">Fresh Groceries</label>
+        </li>
+        <li>
+            <input type="checkbox" id="item2">
+            <label for="item2">Office Supplies</label>
+        </li>
+        <li>
+            <input type="checkbox" id="item3">
+            <label for="item3">Coffee beans</label>
+        </li>
+    </ul>
+
+</body>
+</html>
